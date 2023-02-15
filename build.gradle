@@ -1,0 +1,118 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.2'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id 'org.asciidoctor.jvm.pdf' version '3.3.2'
+}
+
+group = 'ru.fso13'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    asciidoctorExt
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repo.spring.io/release"
+    }
+    maven {
+        url "https://repository.jboss.org/maven2"
+    }
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+    set('sourceDir', file("src/docs/asciidoc"))
+    set('testcontainersVersion', "1.17.6")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.springframework:spring-jdbc'
+    implementation 'com.h2database:h2'
+    implementation 'io.r2dbc:r2dbc-h2'
+    implementation 'org.testng:testng:7.1.0'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:r2dbc'
+    testImplementation 'com.h2database:h2'
+    testImplementation 'io.r2dbc:r2dbc-h2'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
+}
+
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    dependsOn test
+    outputOptions {
+        backends 'html5'
+    }
+    options doctype: 'book'
+
+    attributes = [
+            'source-highlighter': 'highlightjs',
+            'imagesdir'         : './images',
+            'toc'               : 'left',
+            'toclevels'         : 3,
+            'icons'             : 'font',
+            'setanchors'        : '',
+            'idprefix'          : '',
+            'idseparator'       : '-',
+            'snippets'          : snippetsDir,
+            'docinfo'           : 'shared',
+            linkattrs           : true,
+            encoding            : 'utf-8'
+    ]
+
+    inputs.dir 'src/docs/asciidoc'
+    outputDir "src/docs/html"
+    sourceDir 'src/docs/asciidoc'
+    sources {
+        include '*.adoc'
+    }
+}
+
+//pdfThemes {
+//    local 'basic', {
+//        styleDir = file('themes/basic')
+//        styleName = 'very-basic'
+//    }
+//}
+
+tasks.named('test') {
+    outputs.dir 'src/docs/asciidoc'
+    useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+

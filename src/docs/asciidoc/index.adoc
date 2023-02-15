@@ -1,0 +1,45 @@
+= Rest convention
+
+
+== Projects
+=== Endpoints
+==== Create new project
+===== Curl example
+include::{snippets}/project/post-project/1/curl-request.adoc[]
+===== HTTP Request
+include::{snippets}/project/post-project/1/http-request.adoc[]
+===== HTTP Response
+====== Success HTTP responses
+include::{snippets}/project/post-project/1/http-response.adoc[]
+
+==== Get all projects
+===== Curl example
+include::{snippets}/project/get-all-project/1/curl-request.adoc[]
+===== HTTP Request
+include::{snippets}/project/get-all-project/1/http-request.adoc[]
+===== HTTP Response
+====== Success HTTP responses
+include::{snippets}/project/get-all-project/1/http-response.adoc[]
+
+== Users
+=== Endpoints
+==== Create new user
+===== Curl example
+include::{snippets}/user/post-user/1/curl-request.adoc[]
+===== HTTP Request
+include::{snippets}/user/post-user/1/http-request.adoc[]
+===== HTTP Response
+====== Success HTTP responses
+include::{snippets}/user/post-user/1/http-response.adoc[]
+
+==== Get user by id
+===== Curl example
+include::{snippets}/user/get-user-by-id/1/curl-request.adoc[]
+===== HTTP Request
+include::{snippets}/user/get-user-by-id/1/http-request.adoc[]
+===== HTTP Response
+====== Success HTTP responses
+include::{snippets}/user/get-user-by-id/1/http-response.adoc[]
+====== Bad HTTP request/responses
+include::{snippets}/user/get-user-by-id-bad/1/http-request.adoc[]
+include::{snippets}/user/get-user-by-id-bad/1/http-response.adoc[]
